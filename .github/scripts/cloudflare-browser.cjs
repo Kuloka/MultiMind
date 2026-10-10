@@ -22,7 +22,7 @@ const fs=require('fs');
    await page.locator('#possibilities.in').waitFor();
    if(await page.locator('.feature-story').count()!==4)throw Error('Expected four scroll chapters');
    await page.evaluate(()=>document.querySelectorAll('.feature-story')[1].scrollIntoView({block:'center',behavior:'instant'}));
-   await page.locator('.spiral-cloud[data-cloud-chapter="2"]').waitFor();
+   await page.locator('.spiral-cloud[data-cloud-chapter="2"] .cloud-bubble').waitFor();
    const cloud=await page.evaluate(()=>{const scene=document.querySelector('.landing-sculpture');return {visibility:Number(scene.style.getPropertyValue('--cloud-visibility')),x:scene.style.getPropertyValue('--anchor-x'),y:scene.style.getPropertyValue('--anchor-y')};});
    if(cloud.visibility<.9||!cloud.x||!cloud.y)throw Error('Cloud is not attached to a helix point');
    await page.locator('#language-toggle').click();
