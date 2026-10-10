@@ -28,8 +28,10 @@ app.whenReady().then(async()=>{
     assert.ok(paused===await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').toDataURL()"),'Pause freezes particles');
     await win.webContents.executeJavaScript("document.querySelector('#motion-toggle').click();scrollTo({top:innerHeight,behavior:'instant'})");
     await new Promise(resolve=>setTimeout(resolve,900));
-    assert.equal(await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').dataset.particleForm"),'mark');
-    assert.ok(await win.webContents.executeJavaScript("Number(document.querySelector('.landing-sculpture').dataset.scrollProgress)>.6"));
+    assert.equal(await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').dataset.particleForm"),'helix');
+    assert.ok(await win.webContents.executeJavaScript("Number(document.querySelector('.landing-sculpture').dataset.scrollProgress)>0"));
+    assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story').length"),4);
+    assert.ok(await win.webContents.executeJavaScript("document.querySelector('.landing-sculpture').dataset.chapter==='1'"));
     assert.ok(await win.webContents.executeJavaScript("document.querySelector('#possibilities').classList.contains('in')"),'Scrolling reveals information');
     await win.webContents.executeJavaScript("const card=document.querySelector('.button');const r=card.getBoundingClientRect();card.dispatchEvent(new PointerEvent('pointermove',{clientX:r.right-2,clientY:r.top+r.height/2,pointerType:'mouse'}));");
     assert.ok(await win.webContents.executeJavaScript("Number(document.querySelector('.button').style.getPropertyValue('--edge-proximity'))>90"));

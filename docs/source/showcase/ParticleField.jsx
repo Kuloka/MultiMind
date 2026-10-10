@@ -5,9 +5,9 @@ const MARK = [
 ];
 const random = i => { const n = Math.sin(i * 127.13 + 17.9) * 43758.5453; return n - Math.floor(n); };
 
-export default function ParticleField({ form = 'orbit', paused = false, variant = 'hero', interactive = true, pointerTarget = null }) {
-  const canvas = useRef(null), state = useRef({ form, paused });
-  state.current = { form, paused };
+export default function ParticleField({ form = 'orbit', paused = false, variant = 'hero', interactive = true, pointerTarget = null, scrollProgress = 0, anchorIndex = .72 }) {
+  const canvas = useRef(null), state = useRef({ form, paused, scrollProgress, anchorIndex });
+  state.current = { form, paused, scrollProgress, anchorIndex };
   useEffect(() => {
     const element = canvas.current, ctx = element.getContext('2d');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -32,15 +32,15 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
       if (document.hidden) { frame = requestAnimationFrame(draw); return; }
       const stopped = state.current.paused || reduced.matches || document.hidden;
       if (!stopped) elapsed += delta;
-      const signature = `${state.current.form}:${width}:${height}:${reduced.matches}`;
+      const signature = `${state.current.form}:${width}:${height}:${reduced.matches}:${state.current.anchorIndex}`;
       if (stopped && entered && signature === drawnSignature) { frame = requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, width, height);
       const mobile = width < 760, hero = variant === 'hero' || variant === 'landing';
-      const centerX = width * (hero && !mobile ? .7 : .5), centerY = height * (hero ? (mobile ? (variant === 'landing' ? .77 : .65) : .52) : .5);
+      const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .54 : hero ? (mobile ? .65 : .52) : .5);
       const targetSize = Math.min(width * (hero ? (mobile ? (variant === 'landing' ? .27 : .31) : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
       displaySize += (targetSize - displaySize) * (entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1);
       const size = displaySize;
-      const angle = elapsed * .13, ct = Math.cos(angle), st = Math.sin(angle);
+      const angle = elapsed * .13 + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
       const motion = entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1;
       const rendered = [];
       for (let i = 0; i < count; i++) {
@@ -70,6 +70,10 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
         if (mouse.active && interactive && !stopped) {
           const dx = sx - mouse.x, dy = sy - mouse.y, d = Math.hypot(dx, dy);
           if (d < 150 && d > .01) { const force = (1 - d / 150) ** 2 * 36; sx += dx / d * force; sy += dy / d * force; }
+        }
+        if (variant === 'landing' && i === Math.floor(count * state.current.anchorIndex)) {
+          element.parentElement.style.setProperty('--anchor-x', `${sx.toFixed(2)}px`);
+          element.parentElement.style.setProperty('--anchor-y', `${sy.toFixed(2)}px`);
         }
         rendered.push({ x: sx, y: sy, z: rz, alpha: Math.max(.13, Math.min(.95, .5 + rz * .25)), radius: (.6 + p.seed * .9) * perspective });
       }

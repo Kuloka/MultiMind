@@ -4,6 +4,7 @@ import LandingScene from './LandingScene';
 import './BorderGlow.css';
 import './effects.css';
 import './landing-scene.css';
+import './spiral-clouds.css';
 
 // BorderGlow's edge-proximity and directional cone, adapted for existing HTML.
 // Keep the original elements so tabs, links and native details retain behavior.
