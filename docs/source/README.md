@@ -1,8 +1,10 @@
 # Website effects
 
-The build also emits `background-effects.js`, `background-effects.css` and its legal notice in the repository root for Electron. These are prebundled Pattern Waves / Pixel Blast components, with dependencies isolated in this build directory. Shape Waves renders the website's AetherAI wordmark with a static text fallback for unsupported WebGPU. Component provenance and local lifecycle adjustments are listed in `backgrounds/SOURCES.md`.
+The current homepage uses `LandingScene.jsx`, the shared `showcase/ParticleField.jsx` and Kokonut UI Background Paths from the 21st.dev catalogue. The helix morphs into the AetherAI mark during scrolling; a localized control pauses animation. `landing-scene.css` owns the hero and numbered information rows. The standalone recording playground lives at `/showcase/`; build it separately with `npm run build:showcase --prefix docs/source`. Attribution is in `showcase/README.md` and `showcase/KOKONUT-LICENSE.txt`.
 
-Gateway Flow is adapted from the supplied component into the shared root `gateway-flow.js` canvas engine so the static website and Electron app use the same offline implementation. Website options live in `effects.jsx`: its heading is the only click target. App options live in `renderer.js` and do not set an interactive target. Edit either small options object to tune density, speed, opacity and particle size independently. BorderGlow keeps the supplied edge-proximity calculation on the existing HTML elements.
+The build also emits `background-effects.js`, `background-effects.css` and its legal notice in the repository root for Electron. These are prebundled Pattern Waves / Pixel Blast components, with dependencies isolated in this build directory. Component provenance and local lifecycle adjustments are listed in `backgrounds/SOURCES.md`. The website's new particle scene uses Canvas 2D and does not require WebGPU.
+
+The desktop Gateway Flow engine remains in `gateway-flow.js`, with app options in `renderer.js`. The website uses the independent particle scene described above. BorderGlow keeps the supplied edge-proximity calculation on the existing download buttons and cards; the numbered feature rows remain unboxed.
 
 Source: https://github.com/DavidHDev/react-bits — copyright David Haz. See REACT-BITS-LICENSE.md. Components are integrated into the AetherAI website.
 

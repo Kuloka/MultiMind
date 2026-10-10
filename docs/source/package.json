@@ -2,7 +2,8 @@
   "name": "aetherai-site-effects",
   "private": true,
   "scripts": {
-    "build": "node build.cjs"
+    "build": "node build.cjs",
+    "build:showcase": "node showcase/build.cjs"
   },
   "dependencies": {
     "ogl": "^1.0.11",
