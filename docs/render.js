@@ -1,7 +1,7 @@
 globalThis.siteMarkup = function(lang='en') {
  const c=SITE_COPY[lang], e=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
  const repo='https://github.com/Kuloka/AetherAI', release=repo+'/releases/download/v1.24.6/';
- const chapters=[...c.features[3],[c.demos[3][1],c.demos[3][2],c.demos[3][4]]];
+ const chapters=[c.features[3][0],[c.demos[3][1],c.demos[3][2],c.demos[3][4]],...c.features[3].slice(1)];
  const mark='<svg class="brand-mark" width="38" height="38" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g fill="#ededed"><path class="aether-crown" d="M28 168 99 43C112 20 134 20 148 43L222 168C191 154 175 130 151 101 137 83 120 78 106 94 81 123 59 150 28 168Z"/><path class="aether-ribbon" d="M30 178C65 158 79 134 105 120 124 110 139 113 154 127 177 147 192 174 216 195 235 213 217 239 193 225 164 208 148 171 133 162 120 154 111 169 102 184L75 222C60 243 28 237 23 217 19 202 23 188 30 178Z"/></g></svg>';
  const brand=`<a class="brand" href="#">${mark}<span>AetherAI</span></a>`;
  const button=(text,url)=>`<a class="button primary" href="${url}">${e(text)} <span aria-hidden="true">↓</span></a>`;
@@ -15,7 +15,7 @@ globalThis.siteMarkup = function(lang='en') {
  <article><h3>Windows</h3><p>x64 · ${e(c.download[6])}</p>${button(c.download[3],release+'AetherAI.Setup.1.24.6.exe')}<a class="secondary-download" href="${release}AetherAI.1.24.6.exe">${e(c.download[7])} ↗</a></article>
  <article><h3>macOS</h3><p>${e(c.download[8])} · arm64</p>${button(c.download[4],release+'AetherAI-macOS-1.24.6-arm64.dmg')}<a class="secondary-download" href="${release}AetherAI-macOS-1.24.6-x64.dmg">${e(c.download[9])} ↗</a></article>
  <article><h3>Linux</h3><p>x64 · AppImage</p>${button(c.download[5],release+'AetherAI-Linux-1.24.6-x86_64.AppImage')}<a class="secondary-download" href="${release}AetherAI-Linux-1.24.6-amd64.deb">${e(c.download[10])} (.deb) ↗</a></article></div>
- <p class="fine">${e(c.download[11])} 1.24.6</p><p class="other-platforms">${e(c.download[12])}<br>${e(c.download[13])}</p><div class="download-links"><a href="${repo}">${e(c.hero[6])} ↗</a><a href="${repo}/releases">${e(c.download[14])} ↗</a></div></div></section>
+ <p class="fine">${e(c.download[11])} 1.24.6</p><p class="other-platforms">${e(c.download[12])}<br>${e(c.download[13])}</p><div class="download-links"><a href="${repo}">${e(c.hero[6])} ↗</a><a href="${repo}#readme">${e(c.documentation)} ↗</a><a href="${repo}/releases">${e(c.download[14])} ↗</a></div></div></section>
  <section class="faq wrap section reveal"><p class="eyebrow">${e(c.faq[0])}</p><h2>${e(c.faq[1])}</h2>${c.faq[2].map((a,i)=>`<details><summary>${e(a[0])}</summary><p>${e(a[1])}${i===4?` <a href="${repo}/issues">GitHub Issues ↗</a>`:''}</p></details>`).join('')}</section></main>
  <footer class="wrap">${brand}<span>${e(c.footer)}</span><a href="${repo}/releases">${e(c.download[14])} ↗</a></footer>`;
 };

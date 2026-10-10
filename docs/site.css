@@ -3,8 +3,15 @@
 @media(max-width:600px){.wrap{width:calc(100% - 36px)}.nav{height:80px}.nav nav a:not(.nav-download){display:none}.brand{font-size:17px}.hero{padding:55px 0 85px}.hero h1{font-size:61px;letter-spacing:-3.4px;margin:27px 0}.hero-copy{font-size:14px;line-height:1.85}.actions{flex-direction:column;gap:22px;margin-top:28px}.fine{font-size:9px}.product-caption>span:last-child,.product-bottom>span:last-child{display:none}.product-window{border-radius:5px}.section{padding:76px 0}h2{font-size:37px;letter-spacing:-1.7px}.feature-grid,.detail-grid,.inside-grid{grid-template-columns:1fr;gap:32px}.feature-grid{margin-top:40px}.feature-grid article{padding-bottom:18px}.feature-grid h3{margin-top:12px}.feature-note{margin-top:16px}.demo-tabs{max-width:none}.demo{min-height:370px;padding:26px}.demo-top small{font-size:7px}.inside-grid{gap:35px}.detail-grid{margin-top:35px}.download h2{font-size:42px;letter-spacing:-2px}.download-links{gap:20px;font-size:11px}footer{flex-wrap:wrap;padding-bottom:25px}footer>span{width:100%;order:3;font-size:10px}.product-bottom{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.js .reveal{opacity:1;transform:none}}
 .fine,.feature-note,.demo p.demo-footnote,.other-platforms,.product-caption,.product-bottom{color:#858585}
+/* Keep the existing download path within reach throughout the scroll story. */
+#page>.nav{position:sticky;top:0;z-index:5;background:linear-gradient(#0c0c0cf5,#0c0c0ce8);backdrop-filter:blur(10px)}
+.nav nav .nav-download{background:#e5e5e2;color:#161616!important;padding:11px 14px;border-radius:7px;white-space:nowrap}
+.nav nav .nav-download:hover{background:#fff}
+.download-links{flex-wrap:wrap}
+@media(max-width:600px){#page>.nav nav{display:flex;font-size:12px}.nav nav .nav-download{padding:10px}.nav .brand-mark{width:28px;height:28px}.nav .brand{gap:5px;font-size:15px}}
+@media(max-width:360px){.nav .brand>span{display:none}}
 @media(max-width:600px){.hero h1{font-size:clamp(42px,12vw,60px);letter-spacing:-2.3px}}
-#page{position:relative;z-index:1}#page>.nav{position:relative;z-index:5}.nav nav{margin-left:auto}.nav{gap:24px}
+#page{position:relative;z-index:1}#page>.nav{position:sticky;top:0;z-index:5}.nav nav{margin-left:auto}.nav{gap:24px}
 .language-picker{position:relative;flex-shrink:0}.language-picker button{cursor:pointer;color:#ccc;border:0;background:transparent;font-size:13px}
 .static-language-links{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;padding:12px 24px 28px;color:#aaa;font-size:12px}.static-language-links a:hover{color:#fff}.js .static-language-links{display:none}
 #language-toggle{display:flex;align-items:center;gap:10px;background:#202020;border-radius:10px;padding:11px 13px;min-height:42px}

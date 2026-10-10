@@ -7,5 +7,6 @@
 .caption-copy p{font-size:15px;line-height:1.8;color:#aaa;margin:0;text-wrap:pretty}
 .caption-copy .feature-note{display:block;color:#777;font-size:12px;line-height:1.7;margin-top:24px}
 @media(max-width:1100px){.scroll-caption{left:32px;width:32vw}.caption-copy h3{font-size:34px}.caption-copy p{font-size:13px}}
-@media(max-width:760px){.scroll-caption{left:24px;right:24px;top:22%;width:auto;padding:20px;background:linear-gradient(135deg,#0c0c0cf5,#0c0c0cda);border-radius:18px}.caption-copy h3{font-size:30px;letter-spacing:-1px;margin-bottom:16px}.caption-copy .feature-number{margin-bottom:14px}.caption-copy p{font-size:13px}.caption-copy .feature-note{margin-top:16px;font-size:11px}}
+@media(max-width:760px){.scroll-caption{left:24px;right:24px;top:50%;width:auto;padding:20px;background:linear-gradient(135deg,#0c0c0cf5,#0c0c0cda);border-radius:18px}.caption-copy h3{font-size:30px;letter-spacing:-1px;margin-bottom:16px}.caption-copy .feature-number{margin-bottom:14px}.caption-copy p{font-size:13px}.caption-copy .feature-note{margin-top:16px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){.scroll-caption{filter:none;transform:translateY(-50%)}}
+@media(max-width:760px) and (max-height:760px){.scroll-caption{left:18px;right:18px;padding:16px}.caption-copy h3{font-size:26px;line-height:1.12;margin-bottom:14px}.caption-copy p{font-size:12px;line-height:1.65}.caption-copy .feature-note{font-size:10px;line-height:1.5;margin-top:14px}.caption-copy .feature-number{margin-bottom:12px}}

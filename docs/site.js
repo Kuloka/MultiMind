@@ -29,6 +29,10 @@ function renderSite(lang){
  const tabs=[...document.querySelectorAll('[data-demo]')],panel=document.getElementById('demo-panel');
  function select(tab){tabs.forEach(t=>{t.setAttribute('aria-selected',String(t===tab));t.tabIndex=t===tab?0:-1;});const container=document.getElementById('demo-content');container.innerHTML=siteDemo(c.demos[tabs.indexOf(tab)]);panel.setAttribute('aria-labelledby',tab.id);container.classList.remove('demo-content-enter');void container.offsetWidth;container.classList.add('demo-content-enter');}
  tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>select(tab));tab.addEventListener('keydown',event=>{if(!['ArrowDown','ArrowUp','ArrowRight','ArrowLeft','Home','End'].includes(event.key))return;event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(['ArrowDown','ArrowRight'].includes(event.key)?1:-1)+tabs.length)%tabs.length;select(tabs[next]);tabs[next].focus();});});
+ // The navigation should reveal the content it points to, even when details are collapsed.
+ const inside=document.getElementById('inside');
+ document.querySelectorAll('a[href="#inside"]').forEach(link=>link.addEventListener('click',()=>{inside.open=true;}));
+ if(location.hash==='#inside')inside.open=true;
  observer?.disconnect();
  if('IntersectionObserver' in window){document.documentElement.classList.add('js');observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');observer.unobserve(entry.target);}}),{threshold:.05});document.querySelectorAll('.reveal').forEach(element=>observer.observe(element));}
  document.dispatchEvent(new Event('site:render'));

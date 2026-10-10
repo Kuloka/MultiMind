@@ -58,7 +58,9 @@ app.whenReady().then(async()=>{
   }
   assert.equal(await win.webContents.executeJavaScript('document.documentElement.scrollWidth <= innerWidth'),true);
   assert.ok(await win.webContents.executeJavaScript("[...document.images].filter(image=>image.getBoundingClientRect().top<innerHeight).every(image=>image.complete&&image.naturalWidth>0)"));
-  await win.webContents.executeJavaScript("document.querySelector('#inside').open=true;document.querySelector('#tab-cloud').click()");
+  await win.webContents.executeJavaScript("document.querySelector('.nav a[href=\"#inside\"]').click()");
+  assert.equal(await win.webContents.executeJavaScript("document.querySelector('#inside').open"),true,'How it works opens its content');
+  await win.webContents.executeJavaScript("document.querySelector('#tab-cloud').click()");
   assert.equal(await win.webContents.executeJavaScript("document.querySelector('#tab-cloud').getAttribute('aria-selected')"),'true');
   assert.match(await win.webContents.executeJavaScript("document.querySelector('#demo-content').textContent"),/API/);
   fs.writeFileSync(path.join(out,'aetherai-site-desktop.png'),(await win.webContents.capturePage()).toPNG());
@@ -69,6 +71,7 @@ app.whenReady().then(async()=>{
   win.setSize(390,844);await new Promise(resolve=>setTimeout(resolve,250));
   await win.webContents.executeJavaScript("scrollTo({top:0,behavior:'instant'})");
   assert.equal(await win.webContents.executeJavaScript('document.documentElement.scrollWidth <= innerWidth'),true);
+  assert.ok(await win.webContents.executeJavaScript("document.querySelector('.nav-download').getBoundingClientRect().width>0"),'Mobile download link remains visible');
   fs.writeFileSync(path.join(out,'aetherai-site-mobile.png'),(await win.webContents.capturePage()).toPNG());
   for(const code of ['en','ru','es','pt','fr','de','it','tr','pl','uk']){
     await win.webContents.executeJavaScript(`document.querySelector('#language-toggle').click();document.querySelector('[data-language="${code}"]').click()`);
@@ -77,8 +80,20 @@ app.whenReady().then(async()=>{
     await win.webContents.executeJavaScript("document.querySelector('#inside').open=true;document.querySelector('#tab-cloud').click()");
     assert.match(await win.webContents.executeJavaScript("document.querySelector('#demo-content').textContent"),/API/);
     assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.download-grid a').length"),6);
+    await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story')[2].scrollIntoView({block:'center',behavior:'instant'})");
+    await new Promise(resolve=>setTimeout(resolve,100));
+    const fit=await win.webContents.executeJavaScript("(()=>{const r=document.querySelector('.scroll-caption').getBoundingClientRect(),n=document.querySelector('.nav').getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,navBottom:n.bottom,w:innerWidth,h:innerHeight,download:document.querySelector('.nav-download').getBoundingClientRect().width}})()");
+    assert.ok(fit.left>=0&&fit.right<=fit.w&&fit.navBottom>=79&&fit.navBottom<=101&&fit.top>=fit.navBottom&&fit.bottom<=fit.h&&fit.download>0,code+' caption/navigation fit '+JSON.stringify(fit));
   }
   await win.webContents.reload();await new Promise(resolve=>setTimeout(resolve,1200));
+  win.setSize(320,740);
+  for(const code of ['en','ru','es','pt','fr','de','it','tr','pl','uk']){
+    await win.webContents.executeJavaScript(`document.querySelector('#language-toggle').click();document.querySelector('[data-language="${code}"]').click();document.querySelectorAll('.feature-story')[2].scrollIntoView({block:'center',behavior:'instant'})`);
+    await new Promise(resolve=>setTimeout(resolve,100));
+    const fit=await win.webContents.executeJavaScript("(()=>{const r=document.querySelector('.scroll-caption').getBoundingClientRect(),n=document.querySelector('.nav-download').getBoundingClientRect(),l=document.querySelector('#language-toggle').getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,w:innerWidth,h:innerHeight,overlap:n.right>l.left,overflow:document.documentElement.scrollWidth>innerWidth}})()");
+    assert.ok(fit.left>=0&&fit.right<=fit.w&&fit.top>=80&&fit.bottom<=fit.h&&!fit.overlap&&!fit.overflow,code+' narrow phone '+JSON.stringify(fit));
+  }
+  win.setSize(390,844);
   assert.equal(await win.webContents.executeJavaScript('document.documentElement.lang'),'uk');
   await win.webContents.executeJavaScript("document.querySelector('#language-toggle').click();document.querySelector('[data-language=en]').click();document.querySelector('#language-toggle').click();");
   await new Promise(resolve=>setTimeout(resolve,250));
