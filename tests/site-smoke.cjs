@@ -44,6 +44,9 @@ app.whenReady().then(async()=>{
     assert.ok(caption.opacity>.95&&caption.left>=0&&caption.right<caption.width*.5,'Caption fills left column');
     await win.webContents.executeJavaScript("scrollBy({top:innerHeight*.25,behavior:'instant'})");
     await new Promise(resolve=>setTimeout(resolve,150));
+    assert.ok(await win.webContents.executeJavaScript("document.querySelector('.scroll-caption').dataset.captionChapter==='1'&&Number(getComputedStyle(document.querySelector('.scroll-caption')).opacity)>.99&&parseFloat(document.querySelector('.landing-sculpture').style.getPropertyValue('--caption-blur'))===0"),'Text stays sharp while scrolling through the reading interval');
+    await win.webContents.executeJavaScript("scrollBy({top:innerHeight*.45,behavior:'instant'})");
+    await new Promise(resolve=>setTimeout(resolve,150));
     assert.ok(await win.webContents.executeJavaScript("Number(getComputedStyle(document.querySelector('.scroll-caption')).opacity)<.6&&parseFloat(document.querySelector('.landing-sculpture').style.getPropertyValue('--caption-blur'))>4"),'Scrolling fades and blurs outgoing text');
     await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story')[1].scrollIntoView({block:'center',behavior:'instant'})");
     await new Promise(resolve=>setTimeout(resolve,150));

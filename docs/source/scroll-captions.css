@@ -1,4 +1,5 @@
 /* Scroll sets opacity, displacement and blur directly: no automatic text cycling. */
+.feature-grid article.feature-story{min-height:180svh}
 .scroll-clouds .feature-story .chapter-copy{opacity:0;pointer-events:none}
 .scroll-caption{position:absolute;left:max(32px,calc((100vw - 1160px)/2));top:50%;width:min(370px,34vw);opacity:var(--cloud-visibility,0);transform:translateY(calc(-50% + var(--caption-shift,0px)));filter:blur(var(--caption-blur,0px));pointer-events:none}
 .caption-copy .feature-number{display:block;color:#888;font-size:11px;letter-spacing:2px;margin-bottom:25px}

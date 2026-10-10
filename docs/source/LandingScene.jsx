@@ -25,12 +25,14 @@ export default function LandingScene() {
       const active = chapters.reduce((nearest, chapter) => {
         const r = chapter.getBoundingClientRect(), distance = Math.abs(r.top + r.height / 2 - innerHeight / 2);
         const offset = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
-        return !nearest || distance < nearest.distance ? { chapter, distance, offset } : nearest;
+        return !nearest || distance < nearest.distance ? { chapter, distance, offset, halfSpan: r.height / 2 } : nearest;
       }, null);
       layer.current.dataset.chapter = active?.chapter.dataset.chapter || '0';
-      const visibility = active ? Math.max(0, 1 - active.distance / (innerHeight * .48)) : 0;
+      // Hold the copy sharp for most of each chapter, then ease it out near the boundary.
+      const fade = active ? Math.max(0, Math.min(1, (active.distance / active.halfSpan - .55) / .45)) : 1;
+      const visibility = 1 - fade * fade * (3 - 2 * fade);
       layer.current.style.setProperty('--cloud-visibility', String(visibility));
-      layer.current.style.setProperty('--caption-shift', `${reduced.current.matches ? 0 : (active?.offset || 0) * 75}px`);
+      layer.current.style.setProperty('--caption-shift', `${reduced.current.matches ? 0 : Math.sign(active?.offset || 0) * (1 - visibility) * 32}px`);
       layer.current.style.setProperty('--caption-blur', `${reduced.current.matches ? 0 : (1 - visibility) * 10}px`);
       if (active) {
         const id = active.chapter.dataset.chapter;

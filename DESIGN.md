@@ -43,6 +43,8 @@ Use the existing React 19.2 and esbuild dependencies in `docs/source`. Bundle lo
 No blocking questions. Publication on the existing Cloudflare website is authorized by the user's follow-up request.
 
 ## Homepage integration
+
+Each scroll chapter now spans 1.8 viewport heights. Copy stays fully sharp and stationary through the central 55% of each chapter; smooth fade/blur is confined to the boundaries, giving time to read before the next block replaces it.
 The latest correction requires a narrow helix filling the viewport vertically, not horizontally. The opening has no marketing headline, description or download actions. Feature information emerges only in clouds during the scroll story. Text and downloads appear at the ending; further app details are collapsed there. The grayscale palette remains neutral, clouds stay within the viewport, and rotation is restrained.
 The user requested publication on the existing Cloudflare website, then clarified that the helix must stay centered and information must emerge as clouds from its turns. Four scroll chapters activate glass speech bubbles anchored to actual projected particle coordinates. The helix remains visible and rotates with scroll progress; it fades only after the story. Original HTML copy stays accessible and works without JavaScript. All ten languages, feature tabs, native downloads, canonical metadata, CSP and the Google verification file are preserved. The homepage helix moves only with scroll progress, freezes immediately when scrolling stops, and ignores pointer movement. The pause/resume button is removed; the decorative paths are static. Publishing is authorized by the request to put this on the existing site.
 
