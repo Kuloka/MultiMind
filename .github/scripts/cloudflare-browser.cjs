@@ -28,6 +28,7 @@ const fs=require('fs');
    await page.locator('#language-toggle').click();
    await page.locator('[data-language="tr"]').click();
    if(await page.locator('html').getAttribute('lang')!=='tr')throw Error('Language switch failed');
+   await page.locator('#inside > summary').click();
    await page.locator('#tab-cloud').click();
    if(await page.locator('#tab-cloud').getAttribute('aria-selected')!=='true')throw Error('Tabs failed');
    await page.evaluate(()=>scrollTo(0,0));

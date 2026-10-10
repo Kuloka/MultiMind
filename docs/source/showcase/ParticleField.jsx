@@ -37,17 +37,17 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
       ctx.clearRect(0, 0, width, height);
       const mobile = width < 760, hero = variant === 'hero' || variant === 'landing';
       const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .5 : hero ? (mobile ? .65 : .52) : .5);
-      const targetSize = variant === 'landing' ? height * .4 : Math.min(width * (hero ? (mobile ? .31 : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
+      const targetSize = variant === 'landing' ? height * .3 : Math.min(width * (hero ? (mobile ? .31 : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
       displaySize += (targetSize - displaySize) * (entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1);
       const size = displaySize;
-      const angle = elapsed * (variant === 'landing' ? .34 : .13) + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
+      const angle = elapsed * (variant === 'landing' ? .2 : .13) + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
       const motion = entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1;
       const rendered = [];
       for (let i = 0; i < count; i++) {
         const p = points[i], u = i / count, theta = u * Math.PI * 2 * 17, phi = p.seed * Math.PI * 2;
         let x, y, z;
         if (state.current.form === 'helix') {
-          const a = u * Math.PI * 7 + elapsed * (variant === 'landing' ? .6 : .36) + (i % 2) * Math.PI;
+          const a = u * Math.PI * 7 + elapsed * (variant === 'landing' ? .42 : .36) + (i % 2) * Math.PI;
           const r = .8 + (random(i + 1) - .5) * .16;
           x = Math.cos(a) * r; z = Math.sin(a) * r; y = (u - .5) * 3.15;
           if (i % 7 === 0) { const bridge = random(i + 2); x *= bridge; z *= bridge; }
@@ -66,7 +66,7 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
         let rx = p.x * c + p.z * s, rz = -p.x * s + p.z * c;
         const ry = p.y * .96 - rz * .27; rz = p.y * .27 + rz * .96;
         const perspective = 3.8 / (3.8 - rz * .35);
-        let sx = centerX + rx * (variant === 'landing' ? width * .54 : size) * perspective, sy = centerY - ry * size * perspective;
+        let sx = centerX + rx * (variant === 'landing' ? Math.min(size, width * .32) : size) * perspective, sy = centerY - ry * size * perspective;
         if (mouse.active && interactive && !stopped) {
           const dx = sx - mouse.x, dy = sy - mouse.y, d = Math.hypot(dx, dy);
           if (d < 150 && d > .01) { const force = (1 - d / 150) ** 2 * 36; sx += dx / d * force; sy += dy / d * force; }

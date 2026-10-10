@@ -19,7 +19,8 @@ app.whenReady().then(async()=>{
   if(motion){
     await new Promise(resolve=>setTimeout(resolve,1600));
     const bounds=await win.webContents.executeJavaScript(`(()=>{const c=document.querySelector('#particle-scene canvas'),p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y+=6)for(let x=0;x<c.width;x+=6){if(p[(y*c.width+x)*4+3]>8){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)}}return {width:(x1-x0)/c.width,height:(y1-y0)/c.height}})()`);
-    assert.ok(bounds.width>.8&&bounds.height>.9,'Helix must fill the viewport '+JSON.stringify(bounds));
+    assert.ok(bounds.width>.2&&bounds.width<.55&&bounds.height>.85,'Helix must stay narrow and fill the height '+JSON.stringify(bounds));
+    assert.equal(await win.webContents.executeJavaScript("document.querySelector('.hero').querySelectorAll('h1,p,.actions,.eyebrow').length"),0,'Opening contains only the sculpture and controls');
     const before=await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').toDataURL()");
     await new Promise(resolve=>setTimeout(resolve,180));
     assert.ok(before!==await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').toDataURL()"),'Helix must visibly animate');
@@ -41,7 +42,7 @@ app.whenReady().then(async()=>{
   }
   assert.equal(await win.webContents.executeJavaScript('document.documentElement.scrollWidth <= innerWidth'),true);
   assert.ok(await win.webContents.executeJavaScript("[...document.images].filter(image=>image.getBoundingClientRect().top<innerHeight).every(image=>image.complete&&image.naturalWidth>0)"));
-  await win.webContents.executeJavaScript("document.querySelector('#tab-cloud').click()");
+  await win.webContents.executeJavaScript("document.querySelector('#inside').open=true;document.querySelector('#tab-cloud').click()");
   assert.equal(await win.webContents.executeJavaScript("document.querySelector('#tab-cloud').getAttribute('aria-selected')"),'true');
   assert.match(await win.webContents.executeJavaScript("document.querySelector('#demo-content').textContent"),/API/);
   fs.writeFileSync(path.join(out,'aetherai-site-desktop.png'),(await win.webContents.capturePage()).toPNG());
@@ -57,7 +58,7 @@ app.whenReady().then(async()=>{
     await win.webContents.executeJavaScript(`document.querySelector('#language-toggle').click();document.querySelector('[data-language="${code}"]').click()`);
     assert.equal(await win.webContents.executeJavaScript('document.documentElement.lang'),code);
     assert.equal(await win.webContents.executeJavaScript('document.documentElement.scrollWidth <= innerWidth'),true,code+' mobile overflow');
-    await win.webContents.executeJavaScript("document.querySelector('#tab-cloud').click()");
+    await win.webContents.executeJavaScript("document.querySelector('#inside').open=true;document.querySelector('#tab-cloud').click()");
     assert.match(await win.webContents.executeJavaScript("document.querySelector('#demo-content').textContent"),/API/);
     assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.download-grid a').length"),6);
   }
