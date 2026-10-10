@@ -7,6 +7,15 @@ export default function LandingScene() {
   const [cloud, setCloud] = useState(null);
   const reduced = useRef(matchMedia('(prefers-reduced-motion: reduce)'));
   const layer = useRef(null);
+  const bubble = useRef(null);
+  useEffect(() => {
+    if (!bubble.current) return;
+    const observer = new ResizeObserver(entries => {
+      layer.current.style.setProperty('--cloud-height', `${entries[0].borderBoxSize[0].blockSize}px`);
+    });
+    observer.observe(bubble.current);
+    return () => observer.disconnect();
+  }, [cloud?.id]);
   useEffect(() => {
     document.documentElement.classList.add('scroll-clouds');
     return () => document.documentElement.classList.remove('scroll-clouds');
@@ -69,7 +78,7 @@ export default function LandingScene() {
   return <div ref={layer} className="landing-sculpture"><BackgroundPaths /><ParticleField form="helix" paused={paused} variant="landing" pointerTarget={document.body} scrollProgress={progress} anchorIndex={anchor} />
     {cloud && <div className={`spiral-cloud ${Number(cloud.id) % 2 ? 'cloud-right' : 'cloud-left'}`} data-cloud-chapter={cloud.id}>
       <i className="cloud-origin" /><i className="cloud-connector" />
-      <div className="cloud-bubble" dangerouslySetInnerHTML={{ __html: cloud.html }} />
+      <div ref={bubble} className="cloud-bubble" dangerouslySetInnerHTML={{ __html: cloud.html }} />
     </div>}
   </div>;
 }

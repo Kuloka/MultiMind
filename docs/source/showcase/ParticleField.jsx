@@ -11,7 +11,7 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
   useEffect(() => {
     const element = canvas.current, ctx = element.getContext('2d');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const count = innerWidth < 760 ? 1600 : 3200;
+    const count = variant === 'landing' ? (innerWidth < 760 ? 2400 : 5200) : (innerWidth < 760 ? 1600 : 3200);
     const sampler = document.createElement('canvas'); sampler.width = sampler.height = 256;
     const sample = sampler.getContext('2d'); sample.fillStyle = 'white';
     MARK.forEach(d => sample.fill(new Path2D(d)));
@@ -36,18 +36,18 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
       if (stopped && entered && signature === drawnSignature) { frame = requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, width, height);
       const mobile = width < 760, hero = variant === 'hero' || variant === 'landing';
-      const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .54 : hero ? (mobile ? .65 : .52) : .5);
-      const targetSize = Math.min(width * (hero ? (mobile ? (variant === 'landing' ? .27 : .31) : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
+      const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .5 : hero ? (mobile ? .65 : .52) : .5);
+      const targetSize = variant === 'landing' ? height * .4 : Math.min(width * (hero ? (mobile ? .31 : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
       displaySize += (targetSize - displaySize) * (entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1);
       const size = displaySize;
-      const angle = elapsed * .13 + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
+      const angle = elapsed * (variant === 'landing' ? .34 : .13) + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
       const motion = entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1;
       const rendered = [];
       for (let i = 0; i < count; i++) {
         const p = points[i], u = i / count, theta = u * Math.PI * 2 * 17, phi = p.seed * Math.PI * 2;
         let x, y, z;
         if (state.current.form === 'helix') {
-          const a = u * Math.PI * 7 + elapsed * .36 + (i % 2) * Math.PI;
+          const a = u * Math.PI * 7 + elapsed * (variant === 'landing' ? .6 : .36) + (i % 2) * Math.PI;
           const r = .8 + (random(i + 1) - .5) * .16;
           x = Math.cos(a) * r; z = Math.sin(a) * r; y = (u - .5) * 3.15;
           if (i % 7 === 0) { const bridge = random(i + 2); x *= bridge; z *= bridge; }
@@ -66,7 +66,7 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
         let rx = p.x * c + p.z * s, rz = -p.x * s + p.z * c;
         const ry = p.y * .96 - rz * .27; rz = p.y * .27 + rz * .96;
         const perspective = 3.8 / (3.8 - rz * .35);
-        let sx = centerX + rx * size * perspective, sy = centerY - ry * size * perspective;
+        let sx = centerX + rx * (variant === 'landing' ? width * .54 : size) * perspective, sy = centerY - ry * size * perspective;
         if (mouse.active && interactive && !stopped) {
           const dx = sx - mouse.x, dy = sy - mouse.y, d = Math.hypot(dx, dy);
           if (d < 150 && d > .01) { const force = (1 - d / 150) ** 2 * 36; sx += dx / d * force; sy += dy / d * force; }
@@ -75,10 +75,10 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
           element.parentElement.style.setProperty('--anchor-x', `${sx.toFixed(2)}px`);
           element.parentElement.style.setProperty('--anchor-y', `${sy.toFixed(2)}px`);
         }
-        rendered.push({ x: sx, y: sy, z: rz, alpha: Math.max(.13, Math.min(.95, .5 + rz * .25)), radius: (.6 + p.seed * .9) * perspective });
+        rendered.push({ x: sx, y: sy, z: rz, alpha: Math.max(.13, Math.min(.95, (variant === 'landing' ? .65 : .5) + rz * .25)), radius: ((variant === 'landing' ? .75 : .6) + p.seed * .9) * perspective });
       }
       rendered.sort((a, b) => a.z - b.z);
-      for (const p of rendered) { ctx.globalAlpha = p.alpha; ctx.fillStyle = '#f2f1eb'; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill(); }
+      for (const p of rendered) { ctx.globalAlpha = p.alpha; ctx.fillStyle = variant === 'landing' ? '#ededed' : '#f2f1eb'; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill(); }
       ctx.globalAlpha = 1; entered = true; drawnSignature = signature; frame = requestAnimationFrame(draw);
     }
     frame = requestAnimationFrame(draw);

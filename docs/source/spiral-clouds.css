@@ -1,16 +1,23 @@
 /* Feature clouds are anchored to projected points on the helix, not page columns. */
 .scroll-clouds .feature-story .chapter-copy{opacity:0;pointer-events:none}
 .spiral-cloud{position:absolute;left:var(--anchor-x,50%);top:var(--anchor-y,50%);z-index:2;opacity:var(--cloud-visibility,0);pointer-events:none;will-change:left,top,opacity}
-.cloud-origin{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:#edf0e6;box-shadow:0 0 12px #edf0e680}
-.cloud-connector{position:absolute;top:0;left:0;width:38px;height:1px;background:linear-gradient(90deg,#e7ecda99,#e7ecda33)}
-.cloud-bubble{position:absolute;top:0;left:38px;width:345px;padding:25px 28px;border:1px solid #cbd4bd40;border-radius:30px;background:linear-gradient(145deg,#242a25ee,#101510ee);backdrop-filter:blur(22px);box-shadow:0 15px 65px #0005,0 0 30px #cad7b909;transform:translateY(-50%) scale(calc(.64 + var(--cloud-visibility,0)*.36));transform-origin:0 50%;overflow-wrap:anywhere}
-.cloud-bubble::before{content:"";position:absolute;left:-6px;top:calc(50% - 6px);width:11px;height:11px;background:#1a201a;border-left:1px solid #cbd4bd40;border-bottom:1px solid #cbd4bd40;transform:rotate(45deg)}
-.cloud-left .cloud-connector{left:auto;right:0;background:linear-gradient(270deg,#e7ecda99,#e7ecda33)}
-.cloud-left .cloud-bubble{left:auto;right:38px;transform-origin:100% 50%}.cloud-left .cloud-bubble::before{left:auto;right:-6px;border-left:0;border-bottom:0;border-top:1px solid #cbd4bd40;border-right:1px solid #cbd4bd40}
-.cloud-bubble .feature-number{display:block;font:10px/1.5 "Segoe UI",sans-serif;color:#bdc7ac;letter-spacing:1.2px;margin-bottom:15px}
-.cloud-bubble h3{font-size:29px;line-height:1.17;letter-spacing:-1px;font-weight:500;color:#f0f2e8;margin:0 0 17px}
-.cloud-bubble p{font-size:13px;line-height:1.8;color:#b8c1ad;margin:0}
-.cloud-bubble .feature-note{display:block;font-size:10px;line-height:1.75;color:#939f87;margin-top:18px}
+.cloud-origin{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:#ececec;box-shadow:0 0 12px #ececec80}
+.cloud-connector{position:absolute;top:0;left:0;width:38px;height:1px;background:linear-gradient(90deg,#e4e4e499,#e4e4e433)}
+.cloud-bubble{position:absolute;top:0;left:38px;width:345px;padding:25px 28px;border:1px solid #c9c9c940;border-radius:30px;background:linear-gradient(145deg,#262626ee,#121212ee);backdrop-filter:blur(22px);box-shadow:0 15px 65px #0005,0 0 30px #c9c9c909;transform:translateY(-50%) scale(calc(.64 + var(--cloud-visibility,0)*.36));transform-origin:0 50%;overflow-wrap:anywhere}
+.cloud-bubble::before{content:"";position:absolute;left:-6px;top:calc(50% - 6px);width:11px;height:11px;background:#1c1c1c;border-left:1px solid #c9c9c940;border-bottom:1px solid #c9c9c940;transform:rotate(45deg)}
+.cloud-left .cloud-connector{left:auto;right:0;background:linear-gradient(270deg,#e4e4e499,#e4e4e433)}
+.cloud-left .cloud-bubble{left:auto;right:38px;transform-origin:100% 50%}.cloud-left .cloud-bubble::before{left:auto;right:-6px;border-left:0;border-bottom:0;border-top:1px solid #c9c9c940;border-right:1px solid #c9c9c940}
+.cloud-bubble .feature-number{display:block;font:10px/1.5 "Segoe UI",sans-serif;color:#bbbbbb;letter-spacing:1.2px;margin-bottom:15px}
+.cloud-bubble h3{font-size:29px;line-height:1.17;letter-spacing:-1px;font-weight:500;color:#eeeeee;margin:0 0 17px}
+.cloud-bubble p{font-size:13px;line-height:1.8;color:#b7b7b7;margin:0}
+.cloud-bubble .feature-note{display:block;font-size:10px;line-height:1.75;color:#939393;margin-top:18px}
 @media(max-width:1100px){.cloud-bubble{width:290px;padding:22px 24px}.cloud-bubble h3{font-size:25px}.cloud-bubble p{font-size:12px}}
 @media(max-width:760px){.spiral-cloud .cloud-bubble{left:calc(50vw - var(--anchor-x));right:auto;width:min(320px,calc(100vw - 40px));transform:translate(-50%,-35%) scale(calc(.76 + var(--cloud-visibility,0)*.24));transform-origin:50% 30%;padding:22px 24px}.cloud-connector{width:22px}.cloud-bubble::before{display:none}.cloud-bubble h3{font-size:25px}.cloud-bubble p{font-size:12px}.cloud-bubble .feature-note{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.cloud-bubble{transform:translateY(-50%)}.spiral-cloud{will-change:auto}}
+
+/* The enlarged helix may anchor near an edge; keep its cloud inside the viewport. */
+.spiral-cloud .cloud-bubble{left:clamp(calc(24px - var(--anchor-x)), -172px, calc(100vw - var(--anchor-x) - 369px));right:auto;top:clamp(calc(24px - var(--anchor-y)), calc(var(--cloud-height,320px)*-.5), calc(100vh - var(--anchor-y) - var(--cloud-height,320px) - 24px));transform:scale(calc(.64 + var(--cloud-visibility,0)*.36));transform-origin:50% 50%}
+.cloud-bubble::before,.cloud-origin,.cloud-connector{display:none}
+@media(max-width:1100px){.spiral-cloud .cloud-bubble{left:clamp(calc(24px - var(--anchor-x)), -145px, calc(100vw - var(--anchor-x) - 314px))}}
+@media(max-width:760px){.spiral-cloud .cloud-bubble{left:calc(50vw - var(--anchor-x) - min(160px,(100vw - 40px)*.5));transform:scale(calc(.76 + var(--cloud-visibility,0)*.24))}}
+@media(prefers-reduced-motion:reduce){.spiral-cloud .cloud-bubble{transform:none}}

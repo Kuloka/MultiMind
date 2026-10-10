@@ -18,6 +18,8 @@ app.whenReady().then(async()=>{
   fs.writeFileSync(path.join(out,'aetherai-site-spiral-hero.png'),(await win.webContents.capturePage()).toPNG());
   if(motion){
     await new Promise(resolve=>setTimeout(resolve,1600));
+    const bounds=await win.webContents.executeJavaScript(`(()=>{const c=document.querySelector('#particle-scene canvas'),p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y+=6)for(let x=0;x<c.width;x+=6){if(p[(y*c.width+x)*4+3]>8){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)}}return {width:(x1-x0)/c.width,height:(y1-y0)/c.height}})()`);
+    assert.ok(bounds.width>.8&&bounds.height>.9,'Helix must fill the viewport '+JSON.stringify(bounds));
     const before=await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').toDataURL()");
     await new Promise(resolve=>setTimeout(resolve,180));
     assert.ok(before!==await win.webContents.executeJavaScript("document.querySelector('#particle-scene canvas').toDataURL()"),'Helix must visibly animate');
