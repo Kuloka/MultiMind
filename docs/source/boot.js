@@ -13,8 +13,8 @@
     }).catch(()=>{}).finally(()=>clearTimeout(timeout));
   }
   window.addEventListener('load',()=>{
-    load('/site-core.js?v=vertical-clean-20261010');
-    const effects=()=>load('/effects.js?v=vertical-clean-20261010');
+    load('/site-core.js?v=scroll-only-20261010');
+    const effects=()=>load('/effects.js?v=scroll-only-20261010');
     if('requestIdleCallback' in window)requestIdleCallback(effects,{timeout:2000});else setTimeout(effects,300);
   },{once:true});
 })();

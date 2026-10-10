@@ -3,7 +3,7 @@ import ParticleField from './showcase/ParticleField';
 import BackgroundPaths from './showcase/BackgroundPaths';
 
 export default function LandingScene() {
-  const [paused, setPaused] = useState(false), [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [cloud, setCloud] = useState(null);
   const reduced = useRef(matchMedia('(prefers-reduced-motion: reduce)'));
   const layer = useRef(null);
@@ -21,23 +21,7 @@ export default function LandingScene() {
     return () => document.documentElement.classList.remove('scroll-clouds');
   }, []);
   useEffect(() => {
-    let frame = null, toggle;
-    function updateButton() {
-      if (!toggle) return;
-      const isPaused = paused || reduced.current.matches;
-      toggle.setAttribute('aria-pressed', String(isPaused));
-      toggle.setAttribute('aria-label', isPaused ? toggle.dataset.resume : toggle.dataset.pause);
-      toggle.disabled = reduced.current.matches;
-      toggle.querySelector('span').textContent = isPaused ? toggle.dataset.resume : toggle.dataset.pause;
-    }
-    const click = () => setPaused(value => !value);
-    const bind = () => {
-      toggle?.removeEventListener('click', click);
-      toggle = document.getElementById('motion-toggle');
-      if (toggle) toggle.hidden = false;
-      toggle?.addEventListener('click', click); updateButton();
-      request();
-    };
+    let frame = null;
     function scroll() {
       frame = null;
       const story = document.getElementById('possibilities');
@@ -62,20 +46,19 @@ export default function LandingScene() {
       setProgress(reduced.current.matches ? 0 : progress);
     }
     const request = () => { if (frame === null) frame = requestAnimationFrame(scroll); };
-    const motionChange = () => { updateButton(); request(); };
-    bind(); request();
-    document.addEventListener('site:render', bind);
+    request();
+    document.addEventListener('site:render', request);
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request, { passive: true });
-    reduced.current.addEventListener('change', motionChange);
+    reduced.current.addEventListener('change', request);
     return () => {
-      toggle?.removeEventListener('click', click); document.removeEventListener('site:render', bind);
+      document.removeEventListener('site:render', request);
       window.removeEventListener('scroll', request); window.removeEventListener('resize', request);
-      reduced.current.removeEventListener('change', motionChange); if (frame !== null) cancelAnimationFrame(frame);
+      reduced.current.removeEventListener('change', request); if (frame !== null) cancelAnimationFrame(frame);
     };
-  }, [paused]);
+  }, []);
   const anchor = cloud ? [.72, .53, .33, .65][Number(cloud.id) - 1] : .72;
-  return <div ref={layer} className="landing-sculpture"><BackgroundPaths /><ParticleField form="helix" paused={paused} variant="landing" pointerTarget={document.body} scrollProgress={progress} anchorIndex={anchor} />
+  return <div ref={layer} className="landing-sculpture"><BackgroundPaths /><ParticleField form="helix" interactive={false} variant="landing" scrollProgress={progress} anchorIndex={anchor} />
     {cloud && <div className={`spiral-cloud ${Number(cloud.id) % 2 ? 'cloud-right' : 'cloud-left'}`} data-cloud-chapter={cloud.id}>
       <i className="cloud-origin" /><i className="cloud-connector" />
       <div ref={bubble} className="cloud-bubble" dangerouslySetInnerHTML={{ __html: cloud.html }} />

@@ -30,18 +30,20 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
     function draw(now) {
       const delta = Math.min(.05, (now - (last || now)) / 1000); last = now;
       if (document.hidden) { frame = requestAnimationFrame(draw); return; }
-      const stopped = state.current.paused || reduced.matches || document.hidden;
-      if (!stopped) elapsed += delta;
-      const signature = `${state.current.form}:${width}:${height}:${reduced.matches}:${state.current.anchorIndex}`;
+      const scrollDriven = variant === 'landing';
+      const stopped = scrollDriven || state.current.paused || reduced.matches || document.hidden;
+      if (scrollDriven) elapsed = reduced.matches ? 0 : state.current.scrollProgress * 14;
+      else if (!stopped) elapsed += delta;
+      const signature = `${state.current.form}:${width}:${height}:${reduced.matches}:${state.current.anchorIndex}:${scrollDriven ? elapsed : ''}`;
       if (stopped && entered && signature === drawnSignature) { frame = requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, width, height);
       const mobile = width < 760, hero = variant === 'hero' || variant === 'landing';
       const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .5 : hero ? (mobile ? .65 : .52) : .5);
       const targetSize = variant === 'landing' ? height * .3 : Math.min(width * (hero ? (mobile ? .31 : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
-      displaySize += (targetSize - displaySize) * (entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1);
+      displaySize += (targetSize - displaySize) * (entered && !reduced.matches && !scrollDriven ? 1 - Math.exp(-delta * 5) : 1);
       const size = displaySize;
       const angle = elapsed * (variant === 'landing' ? .2 : .13) + state.current.scrollProgress * Math.PI * .8, ct = Math.cos(angle), st = Math.sin(angle);
-      const motion = entered && !reduced.matches ? 1 - Math.exp(-delta * 5) : 1;
+      const motion = entered && !reduced.matches && !scrollDriven ? 1 - Math.exp(-delta * 5) : 1;
       const rendered = [];
       for (let i = 0; i < count; i++) {
         const p = points[i], u = i / count, theta = u * Math.PI * 2 * 17, phi = p.seed * Math.PI * 2;
