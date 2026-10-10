@@ -37,6 +37,17 @@ app.whenReady().then(async()=>{
     assert.ok(await win.webContents.executeJavaScript("Number(document.querySelector('.landing-sculpture').dataset.scrollProgress)>0"));
     assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story').length"),4);
     assert.ok(await win.webContents.executeJavaScript("document.querySelector('.landing-sculpture').dataset.chapter==='1'"));
+    await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story')[0].scrollIntoView({block:'center',behavior:'instant'})");
+    await new Promise(resolve=>setTimeout(resolve,150));
+    const caption=await win.webContents.executeJavaScript("(()=>{const c=document.querySelector('.scroll-caption'),r=c.getBoundingClientRect();return {chapter:c.dataset.captionChapter,opacity:Number(getComputedStyle(c).opacity),left:r.left,right:r.right,width:innerWidth,text:c.textContent}})()");
+    assert.equal(caption.chapter,'1');
+    assert.ok(caption.opacity>.95&&caption.left>=0&&caption.right<caption.width*.5,'Caption fills left column');
+    await win.webContents.executeJavaScript("scrollBy({top:innerHeight*.25,behavior:'instant'})");
+    await new Promise(resolve=>setTimeout(resolve,150));
+    assert.ok(await win.webContents.executeJavaScript("Number(getComputedStyle(document.querySelector('.scroll-caption')).opacity)<.6&&parseFloat(document.querySelector('.landing-sculpture').style.getPropertyValue('--caption-blur'))>4"),'Scrolling fades and blurs outgoing text');
+    await win.webContents.executeJavaScript("document.querySelectorAll('.feature-story')[1].scrollIntoView({block:'center',behavior:'instant'})");
+    await new Promise(resolve=>setTimeout(resolve,150));
+    assert.ok(await win.webContents.executeJavaScript("document.querySelector('.scroll-caption').dataset.captionChapter==='2'&&Number(getComputedStyle(document.querySelector('.scroll-caption')).opacity)>.95"),'Next scroll chapter replaces text');
     assert.ok(await win.webContents.executeJavaScript("document.querySelector('#possibilities').classList.contains('in')"),'Scrolling reveals information');
     await win.webContents.executeJavaScript("const card=document.querySelector('.button');const r=card.getBoundingClientRect();card.dispatchEvent(new PointerEvent('pointermove',{clientX:r.right-2,clientY:r.top+r.height/2,pointerType:'mouse'}));");
     assert.ok(await win.webContents.executeJavaScript("Number(document.querySelector('.button').style.getPropertyValue('--edge-proximity'))>90"));

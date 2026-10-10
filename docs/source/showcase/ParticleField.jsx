@@ -38,7 +38,7 @@ export default function ParticleField({ form = 'orbit', paused = false, variant 
       if (stopped && entered && signature === drawnSignature) { frame = requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, width, height);
       const mobile = width < 760, hero = variant === 'hero' || variant === 'landing';
-      const centerX = width * (variant === 'landing' ? .5 : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .5 : hero ? (mobile ? .65 : .52) : .5);
+      const centerX = width * (variant === 'landing' ? (mobile ? .55 : .7) : hero && !mobile ? .7 : .5), centerY = height * (variant === 'landing' ? .5 : hero ? (mobile ? .65 : .52) : .5);
       const targetSize = variant === 'landing' ? height * .3 : Math.min(width * (hero ? (mobile ? .31 : .2) : .4), height * (state.current.form === 'helix' ? .24 : .31));
       displaySize += (targetSize - displaySize) * (entered && !reduced.matches && !scrollDriven ? 1 - Math.exp(-delta * 5) : 1);
       const size = displaySize;

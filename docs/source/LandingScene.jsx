@@ -7,15 +7,6 @@ export default function LandingScene() {
   const [cloud, setCloud] = useState(null);
   const reduced = useRef(matchMedia('(prefers-reduced-motion: reduce)'));
   const layer = useRef(null);
-  const bubble = useRef(null);
-  useEffect(() => {
-    if (!bubble.current) return;
-    const observer = new ResizeObserver(entries => {
-      layer.current.style.setProperty('--cloud-height', `${entries[0].borderBoxSize[0].blockSize}px`);
-    });
-    observer.observe(bubble.current);
-    return () => observer.disconnect();
-  }, [cloud?.id]);
   useEffect(() => {
     document.documentElement.classList.add('scroll-clouds');
     return () => document.documentElement.classList.remove('scroll-clouds');
@@ -33,11 +24,14 @@ export default function LandingScene() {
       const chapters = [...document.querySelectorAll('.feature-story')];
       const active = chapters.reduce((nearest, chapter) => {
         const r = chapter.getBoundingClientRect(), distance = Math.abs(r.top + r.height / 2 - innerHeight / 2);
-        return !nearest || distance < nearest.distance ? { chapter, distance } : nearest;
+        const offset = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+        return !nearest || distance < nearest.distance ? { chapter, distance, offset } : nearest;
       }, null);
       layer.current.dataset.chapter = active?.chapter.dataset.chapter || '0';
       const visibility = active ? Math.max(0, 1 - active.distance / (innerHeight * .48)) : 0;
       layer.current.style.setProperty('--cloud-visibility', String(visibility));
+      layer.current.style.setProperty('--caption-shift', `${reduced.current.matches ? 0 : (active?.offset || 0) * 75}px`);
+      layer.current.style.setProperty('--caption-blur', `${reduced.current.matches ? 0 : (1 - visibility) * 10}px`);
       if (active) {
         const id = active.chapter.dataset.chapter;
         const html = active.chapter.querySelector('.chapter-copy').innerHTML;
@@ -59,9 +53,8 @@ export default function LandingScene() {
   }, []);
   const anchor = cloud ? [.72, .53, .33, .65][Number(cloud.id) - 1] : .72;
   return <div ref={layer} className="landing-sculpture"><BackgroundPaths /><ParticleField form="helix" interactive={false} variant="landing" scrollProgress={progress} anchorIndex={anchor} />
-    {cloud && <div className={`spiral-cloud ${Number(cloud.id) % 2 ? 'cloud-right' : 'cloud-left'}`} data-cloud-chapter={cloud.id}>
-      <i className="cloud-origin" /><i className="cloud-connector" />
-      <div ref={bubble} className="cloud-bubble" dangerouslySetInnerHTML={{ __html: cloud.html }} />
+    {cloud && <div className="scroll-caption" data-caption-chapter={cloud.id}>
+      <div className="caption-copy" dangerouslySetInnerHTML={{ __html: cloud.html }} />
     </div>}
   </div>;
 }
